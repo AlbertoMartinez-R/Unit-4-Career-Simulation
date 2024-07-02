@@ -1,6 +1,5 @@
 import { client } from "../database/db";
 
-
 export const seedProducts = async() => {
     try {
 
@@ -24,7 +23,7 @@ export const seedProducts = async() => {
             (SONY, 83" Bravia OLED 4K TV, Most High Resolution TV in the market, $2500, false, 0);
             (ASUS, Tuf Gaming Laptop, used gaming laptop with last year spec, $500, true, 1)
             `)
-            
+
     } catch (e) {
         console.error('Failed to seed user Database!');
         console.error(e);
