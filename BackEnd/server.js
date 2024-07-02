@@ -1,5 +1,5 @@
-import express from 'exress';
-import { connectDataBase } from './database/db';
+import express from 'express';
+import { connectDataBase } from './database/db.js';
 
 
 
@@ -25,3 +25,5 @@ const startApp = async () => {
         console.error(e);
     };
 };
+
+startApp();

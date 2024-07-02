@@ -1,6 +1,6 @@
 import { client } from "../database/db";
 
-export const seedProducts = async() => {
+export const seedProducts = async () => {
     try {
 
         await client.query(`
@@ -26,6 +26,21 @@ export const seedProducts = async() => {
 
     } catch (e) {
         console.error('Failed to seed user Database!');
+        console.error(e);
+    }
+};
+
+
+export const getProduct = async () => {
+    try {
+        const { rows: products } = await client.query(`
+            SELECT * FROM products;
+            `)
+
+        return products;
+
+    } catch (e) {
+        console.error('Failed to get Products!');
         console.error(e);
     }
 };
