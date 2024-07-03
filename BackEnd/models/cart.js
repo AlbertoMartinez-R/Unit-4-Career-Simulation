@@ -1,4 +1,4 @@
-import { client } from "../database/db";
+import { client } from "../database/db.js";
 
 export const seedCart = async () => {
     try {
@@ -7,10 +7,8 @@ export const seedCart = async () => {
             DROP TABLE IF EXISTS cart;
             CREATE TABLE IF NOT EXISTS cart (
                 id SERIAL PRIMARY KEY,
-                brand REFERENCES product(brand) NOT NULL,
-                name REFERENCES product(name) NOT NULL,
-                price REFERENCES product(price) NOT NULL,
-                quality REFERENCES product(quality) NOT NULL
+                product_id INTEGER REFERENCES products(id),
+                quality INTEGER DEFAULT 1
             )
             `)
 

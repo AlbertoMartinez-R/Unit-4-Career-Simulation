@@ -1,7 +1,7 @@
 import { client, connectDataBase } from './db.js';
-import { seedUsers, getUser } from '../models/user.js';
+import { seedUsers, getUser, createUser } from '../models/user.js';
 import { seedProducts, getProduct } from '../models/product.js';
-import { seedCart, createCart, getCart } from '../models/cart';
+import { seedCart, createCart, getCart } from '../models/cart.js';
 
 
 const initDataBase = async (seed = false) => {
@@ -28,6 +28,7 @@ const initDataBase = async (seed = false) => {
 export const getMethods = {
     user: {
         getUser,
+        createUser
     },
 
     product: {
@@ -41,4 +42,4 @@ export const getMethods = {
 };
 
 
-initDataBase(true);
+// initDataBase(true);

@@ -1,17 +1,25 @@
-import { client } from "../database/db";
+import { client } from "../database/db.js";
+import bcrypt from 'bcrypt';
+const salt_count = 10
 
 export const seedUsers = async () => {
     try {
+
+        const secretPass1 = await bcrypt.hash('armyVet', 10)
+        const secretPass2 = await bcrypt.hash('futureFS', 10)
+
 
         await client.query(`
             DROP TABLE IF EXISTS users;
             CREATE TABLE IF NOT EXISTS users (
                 id SERIAL PRIMARY KEY,
-                name VARCHAR(255) NOT NULL
+                username VARCHAR(255) NOT NULL,
+                password VARCHAR(255) NOT NULL
             );
 
-            INSERT INTO users (name)
-            VALUES ('Edwin'), ('Alberto');
+            INSERT INTO users (username, password)
+            VALUES ('EdwinV', '${secretPass1}'), 
+                   ('Alberto', '${secretPass2}');  
             `)
     } catch (e) {
         console.error('Failed to seed user Database!');
@@ -30,6 +38,25 @@ export const getUser = async () => {
 
     } catch (e) {
         console.error('Failed to get User!');
+        console.error(e);
+    }
+};
+
+
+export const createUser = async ({username, password})=> {
+    try {
+
+        const encryptedPassword = await bcrypt.hash(password, salt_count)
+        const result = await client.query(`
+            INSERT INTO users (username, password)
+            VALUES ($1, $2)
+            RETURNING *
+            `,[username, encryptedPassword])
+
+            return result.rows[0]
+
+    } catch (e) {
+        console.error('Failed to create User!');
         console.error(e);
     }
 };

@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "seed": "nodemon ./database/db.js",
+    "seed": "nodemon ./database/index.js",
     "start": "nodemon ./server.js"
   },
   "keywords": [],

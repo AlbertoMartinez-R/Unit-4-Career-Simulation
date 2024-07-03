@@ -1,10 +1,10 @@
-import { client } from "../database/db";
+import { client } from "../database/db.js";
 
 export const seedProducts = async () => {
     try {
 
         await client.query(`
-            DROP TABLE IF EXISTS products;
+            DROP TABLE IF EXISTS products CASCADE;
             CREATE TABLE IF NOT EXISTS products (
                 id SERIAL PRIMARY KEY,
                 brand VARCHAR(255) NOT NULL,
@@ -16,12 +16,12 @@ export const seedProducts = async () => {
 
             );
 
-            INSERT INTO products (brand, description, price, in_stock, quality)
+            INSERT INTO products (brand, name, description, price, in_stock, quality)
             VALUES 
-            (SAMSUNG, Galaxy S24 Ultra, The newest phone on the Galaxy series ,$999, true, 5 );
-            (Apple, Apple Vision Pro, Vision Pro is a revolutionary and futuristic spatial computing device, $3000, true, 1 );
-            (SONY, 83" Bravia OLED 4K TV, Most High Resolution TV in the market, $2500, false, 0);
-            (ASUS, Tuf Gaming Laptop, used gaming laptop with last year spec, $500, true, 1)
+            ('SAMSUNG', 'Galaxy S24 Ultra', 'The newest phone on the Galaxy series', 999, true, 5 ),
+            ('Apple', 'Apple Vision Pro', 'Vision Pro is a revolutionary and futuristic spatial computing device', 3000, true, 1 ),
+            ('SONY', '83" Bravia OLED 4K TV', 'Most High Resolution TV in the market', 2500, false, 0),
+            ('ASUS', 'Tuf Gaming Laptop', 'used gaming laptop with last year spec', 500, true, 1)
             `)
 
     } catch (e) {
