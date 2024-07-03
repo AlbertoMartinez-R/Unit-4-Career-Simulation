@@ -16,7 +16,18 @@ apiRouter.get('/user,', async (request, response, next) => {
 });
 
 apiRouter.post('/user', async (request, response, next) => {
+    const {username, password} = request.body;
+
     try {
+        
+    const newUser = await getMethods.user.createUser({
+        username,
+        password,
+    });
+
+    response.status(201).send({
+        message: `User created successfully!`,
+    });
 
     } catch (e) {
         next(e);
@@ -58,9 +69,18 @@ apiRouter.get('/cart', async (request, response, next) => {
     }
 });
 
-
 apiRouter.post('/cart', async (request, response, next) => {
+    const { productId, quality } = request.body;
+
     try {
+     const makeCart = await getMethods.cart.createCart({
+        productId, 
+        quality,
+     });
+
+     response.status(201).send({
+        message: `Created Your Cart!`,
+     });
 
     } catch (e) {
         next(e);
