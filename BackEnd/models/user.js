@@ -60,3 +60,15 @@ export const createUser = async ({username, password})=> {
         console.error(e);
     }
 };
+
+
+export const getUserByUsername =async (username) => {
+    try {
+        const { rows } = await client.query(`SELECT * FROM users 
+            WHERE username = $1`, [username])
+        console.log("selected customers", rows)
+        return rows[0]
+    } catch (err) {
+        console.log("failed getting customer", err)
+    }
+}   
