@@ -12,11 +12,11 @@ export const seedProducts = async () => {
                 description VARCHAR (255) NOT NULL,
                 price INTEGER NOT NULL,
                 in_stock BOOLEAN,
-                quality INTEGER
+                quantity INTEGER
 
             );
 
-            INSERT INTO products (brand, name, description, price, in_stock, quality)
+            INSERT INTO products (brand, name, description, price, in_stock, quantity)
             VALUES 
             ('SAMSUNG', 'Galaxy S24 Ultra', 'The newest phone on the Galaxy series', 999, true, 5 ),
             ('Apple', 'Apple Vision Pro', 'Vision Pro is a revolutionary and futuristic spatial computing device', 3000, true, 1 ),

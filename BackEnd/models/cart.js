@@ -8,7 +8,7 @@ export const seedCart = async () => {
             CREATE TABLE IF NOT EXISTS cart (
                 id SERIAL PRIMARY KEY,
                 product_id INTEGER REFERENCES products(id),
-                quality INTEGER DEFAULT 1
+                quantity INTEGER DEFAULT 1
             )
             `)
 
@@ -24,7 +24,7 @@ export const createCart = async ({ brand, name, price, quality }) => {
     try {
 
         const { rows } = await client.query(`
-            INSERT INTO cart (brand, name, price, quality)
+            INSERT INTO cart (brand, name, price, quantity)
             VALUES ($1, $2. $3, $4)
             RETURNING *;
         `, [brand, name, price, quality])
@@ -43,7 +43,7 @@ export const getCart = async () => {
             JOIN brand ON cart.brand = product.brand
             JOIN name ON cart.name = product.name
             JOIN price ON cart.price = product.price
-            JOIN quality ON cart.quality = product.quality
+            JOIN quantity ON cart.quality = product.quantity
             `);
         return cart;
 

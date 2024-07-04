@@ -19,7 +19,7 @@ export const seedUsers = async () => {
 
             INSERT INTO users (username, password)
             VALUES ('EdwinV', '${secretPass1}'), 
-                   ('Alberto', '${secretPass2}');  
+                   ('AlbertoM', '${secretPass2}');  
             `)
     } catch (e) {
         console.error('Failed to seed user Database!');

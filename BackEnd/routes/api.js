@@ -73,7 +73,15 @@ apiRouter.get('/user,', async (request, response, next) => {
 // });
 
 apiRouter.delete('/user', async (request, response, next) => {
+    const { userId } = request.body;
+
     try {
+
+        const deleteUser = await getMethods.user.getUser(userId)
+
+        response.status(200).send({
+            message: 'Successfully Deleted User!'
+        });
 
     } catch (e) {
         next(e);
@@ -108,12 +116,12 @@ apiRouter.get('/cart', async (request, response, next) => {
 });
 
 apiRouter.post('/cart', async (request, response, next) => {
-    const { productId, quality } = request.body;
+    const { productId, quantity } = request.body;
 
     try {
         const makeCart = await getMethods.cart.createCart({
             productId,
-            quality,
+            quantity,
         });
 
         response.status(201).send({
@@ -126,7 +134,18 @@ apiRouter.post('/cart', async (request, response, next) => {
 });
 
 apiRouter.delete('/cart', async (request, response, next) => {
+    const { productId, quantity } = request.body;
+
     try {
+
+        const deleteCart = await getMethods.cart.getCart({
+            productId,
+            quantity
+        });
+
+        response.status(200).send({
+            message: 'Succesfully Deleted the cart!'
+        });
 
     } catch (e) {
         next(e);
