@@ -8,7 +8,7 @@ import RegisterPage from './pages/RegisterPage';
 import ProductList from './components/products/ProductList';
 import AdminDashboard from './components/Admin/AdminDashboard';
 import PrivateRoute from './components/PrivateRoute';
-import { AuthProvider } from './context/authcontext';
+import { AuthProvider } from './components/context/authcontext';
 import './App.css';
 
 const App = () => {
