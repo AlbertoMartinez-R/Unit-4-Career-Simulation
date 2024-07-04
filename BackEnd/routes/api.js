@@ -5,21 +5,34 @@ import { getUserByUsername } from '../models/user.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-// const secretJwt;
+const secretJwt = 'superSecret';
 
 const apiRouter = express.Router();
 
-apiRouter.post('/login', async(request, response, next) =>{
+apiRouter.post('/login', async (request, response, next) => {
     try {
-        const {username, password} = request.body;
+        const { username, password } = request.body;
         const newUser = await getUserByUsername(username)
 
-        if(newUser){
+        if (newUser) {
             console.log('User Found!')
+            if (await bcrypt.compare(password, newUser.password) == true) {
 
-            
+                const token = jwt.sign({
+                    id: newUser.id,
+                    username: newUser.username
+                },
+                    secretJwt,
+                    { expiresIn: '1w' }
+                )
+                response.send({ message: 'Successfully Logged In!', token: token })
+            } else {
+                response.send('Username or Password did not match!')
+            }
+        } else {
+            response.send('User Not Found!')
         }
-
+        console.log(newUser)
 
     } catch (e) {
         console.error('Failed to Login!');
@@ -44,7 +57,7 @@ apiRouter.get('/user,', async (request, response, next) => {
 // //     const {username, password} = request.body;
 
 // //     try {
-        
+
 // //     const newUser = await getMethods.user.createUser({
 // //         username,
 // //         password,
@@ -98,14 +111,14 @@ apiRouter.post('/cart', async (request, response, next) => {
     const { productId, quality } = request.body;
 
     try {
-     const makeCart = await getMethods.cart.createCart({
-        productId, 
-        quality,
-     });
+        const makeCart = await getMethods.cart.createCart({
+            productId,
+            quality,
+        });
 
-     response.status(201).send({
-        message: `Created Your Cart!`,
-     });
+        response.status(201).send({
+            message: `Created Your Cart!`,
+        });
 
     } catch (e) {
         next(e);
