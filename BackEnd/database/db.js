@@ -20,7 +20,7 @@ const client = new Client({
     database: DB_NAME,
     ssl: {
         rejectUnauthorized: true,
-        ca: fs.readFileSync('path/to/TestPurposes.pem').toString(),
+        ca: fs.readFileSync('../TestPurposes.pem').toString(),
     },
 });
 
