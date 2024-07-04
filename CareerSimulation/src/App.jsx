@@ -1,14 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Header from './components/common/Header';
-import Footer from './components/common/Footer';
+import Header from './common/Header';
+import Footer from './common/Footer';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
-import ProductList from './components/Products/ProductList';
+import ProductList from './components/products/ProductList';
 import AdminDashboard from './components/Admin/AdminDashboard';
 import PrivateRoute from './components/PrivateRoute';
-import { AuthProvider } from './components/AuthContext';
+import { AuthProvider } from './context/authcontext';
 import './App.css';
 
 const App = () => {
