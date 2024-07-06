@@ -8,7 +8,6 @@ export const seedUsers = async () => {
         const secretPass1 = await bcrypt.hash('armyVet', 10)
         const secretPass2 = await bcrypt.hash('futureFS', 10)
 
-
         await client.query(`
             DROP TABLE IF EXISTS users;
             CREATE TABLE IF NOT EXISTS users (

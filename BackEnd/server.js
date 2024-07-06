@@ -1,24 +1,16 @@
+import dotenv from 'dotenv';
 import express from 'express';
-import { connectDataBase } from './database/db.js';
-import apiRouter from './routes/api.js';
 
+dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 
 app.use(express.json());
-app.use('/api', apiRouter);
 
-const startApp = async () => {
-    try {
-        await connectDataBase();
-        app.listen(PORT, () => {
-            console.log(`Server is now listening to PORT ${PORT}`);
-        });
-    } catch (e) {
-        console.error('Failed to start application!');
-        console.error(e);
-    }
-};
+app.get('/', (req, res) => {
+  res.send('Server is running and connected to the database!');
+});
 
-startApp();
-
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});

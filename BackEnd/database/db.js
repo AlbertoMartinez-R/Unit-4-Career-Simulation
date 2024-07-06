@@ -1,37 +1,24 @@
 import pg from 'pg';
-import fs from 'fs';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-const { Client } = pg;
+const { Pool } = pg;
 
-const DATABASE_URL = process.env.DATABASE_URL || `postgres://localhost:5432/amazon_store`;
-const DB_HOST = process.env.DB_HOST || 'amazonstore.cra06w0aaa0a.us-east-2.rds.amazonaws.com';
-const DB_USER = process.env.DB_USER || 'postgres';
-const DB_PASSWORD = process.env.DB_PASSWORD || 'PotatoSalad123456789';
-const DB_NAME = process.env.DB_NAME || 'amazonstore';
-
-const client = new Client({
-    host: DB_HOST,
-    port: 5432,
-    user: DB_USER,
-    password: DB_PASSWORD,
-    database: DB_NAME,
-    ssl: {
-        rejectUnauthorized: true,
-        ca: fs.readFileSync('../TestPurposes.pem').toString(),
-    },
+const pool = new Pool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT
 });
 
-export const connectDataBase = async () => {
-    try {
-        await client.connect();
-        console.log(`Successfully connected to the Database ${DB_HOST}`);
-    } catch (e) {
-        console.error(`Failed to connect to the Database ${DB_HOST}`);
-        console.error(e);
-    }
-};
+pool.connect((err) => {
+  if (err) {
+    console.error('Error connecting to the database:', err);
+  } else {
+    console.log('Connected to the PostgreSQL database.');
+  }
+});
 
-export { client };
+export default pool;
