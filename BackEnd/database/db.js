@@ -3,17 +3,18 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const { Pool } = pg;
+const { Client } = pg;
 
-const pool = new Pool({
+const client = new Client({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  port: process.env.DB_PORT
+  port: process.env.DB_PORT,
+  ssl: { rejectUnauthorized: false }
 });
 
-pool.connect((err) => {
+client.connect((err) => {
   if (err) {
     console.error('Error connecting to the database:', err);
   } else {
@@ -21,4 +22,4 @@ pool.connect((err) => {
   }
 });
 
-export default pool;
+export default client;
