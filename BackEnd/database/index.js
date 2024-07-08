@@ -17,8 +17,6 @@ export const initDataBase = async (seed = false) => {
 
     } catch (e) {
         console.error('Failed to initiate Database!', e);
-    } finally {
-        client.end();
     }
 };
 

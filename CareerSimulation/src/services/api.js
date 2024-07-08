@@ -1,14 +1,11 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api/';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
 console.log('API Base URL:', API_BASE_URL);
 
-export const fetchProtectedData = async () => {
-    const token = localStorage.getItem('token');
-
-    const response = await fetch(`${API_BASE_URL}/protected-route`, {
+const fetchPublicData = async () => {
+    const response = await fetch('http://localhost:3000/api/public-route', {
         method: 'GET',
         headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            'Content-Type': 'application/json'
         }
     });
 

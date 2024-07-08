@@ -31,7 +31,7 @@ export const seedProducts = async () => {
 export const getProducts = async () => {
   try {
     const { rows: products } = await client.query(`
-      SELECT * FROM products;
+      SELECT * FROM public.products;
     `);
     return products;
   } catch (e) {
@@ -42,7 +42,7 @@ export const getProducts = async () => {
 export const getProductById = async (id) => {
   try {
     const { rows: product } = await client.query(`
-      SELECT * FROM products WHERE id = $1;
+      SELECT * FROM pubkic.products WHERE id = $1;
     `, [id]);
 
     if (product.length === 0) {
@@ -58,7 +58,7 @@ export const getProductById = async (id) => {
 export const removeProductById = async (id) => {
   try {
     const result = await client.query(`
-      DELETE FROM products WHERE id = $1 RETURNING *;
+      DELETE FROM public.products WHERE id = $1 RETURNING *;
     `, [id]);
 
     if (result.rowCount === 0) {

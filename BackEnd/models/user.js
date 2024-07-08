@@ -31,7 +31,7 @@ export const seedUsers = async () => {
 
 export const getUser = async () => {
     try {
-        const { rows: users } = await client.query('SELECT * FROM users;');
+        const { rows: users } = await client.query('SELECT * FROM public.users ORDER BY id ASC;');
         return users;
     } catch (e) {
         console.error('Failed to get users!');
