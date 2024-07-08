@@ -1,21 +1,18 @@
-import dotenv from 'dotenv';
 import express from 'express';
-import authRoutes from './routes/authRoutes.js';
-// import cartRoutes from './routes/cartRoutes.js';
+import apiRouter from './routes/api.js';
+import { initDataBase } from './database/index.js';
+import dotenv from 'dotenv';
 
 dotenv.config();
+
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
-
-app.use('/api/auth', authRoutes);
-// More routes here 
-
-app.get('/', (req, res) => {
-  res.send('Server is running and connected to the database!');
-});
+app.use('/api', apiRouter);
 
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  console.log(`Server is running on http://localhost:${port}/api`);
 });
+
+initDataBase(true); // Initialize and seed the database if needed

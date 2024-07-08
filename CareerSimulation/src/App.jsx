@@ -22,10 +22,7 @@ const App = () => {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/products" element={<ProductList />} />
-            <Route
-              path="/admin"
-              element={<PrivateRoute component={AdminDashboard} roles={['admin']} />}
-            />
+            <Route path="/admin" element={<PrivateRoute component={AdminDashboard} roles={['admin']} />} />
           </Routes>
         </div>
         <Footer />

@@ -5,7 +5,7 @@ dotenv.config();
 
 const { Client } = pg;
 
-const client = new Client({
+export const client = new Client({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
@@ -14,12 +14,11 @@ const client = new Client({
   ssl: { rejectUnauthorized: false }
 });
 
-client.connect((err) => {
-  if (err) {
-    console.error('Error connecting to the database:', err);
-  } else {
+export const connectDataBase = async () => {
+  try {
+    await client.connect();
     console.log('Connected to the PostgreSQL database.');
+  } catch (err) {
+    console.error('Error connecting to the database:', err);
   }
-});
-
-export default client;
+};

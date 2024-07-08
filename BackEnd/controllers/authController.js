@@ -1,4 +1,4 @@
-import client from '../database/db.js';
+import { client } from "../database/db.js";
 
 export const loginUser = async (req, res) => {
   try {

@@ -1,25 +1,26 @@
-import client from '../database/db.js';
+import { client } from '../database/db.js';
 import bcrypt from 'bcrypt';
 const salt_count = 10;
 
 export const seedUsers = async () => {
     try {
-        const secretPass1 = await bcrypt.hash('armyVet', salt_count);
-        const secretPass2 = await bcrypt.hash('futureFS', salt_count);
+        const secretPass1 = await bcrypt.hash('armyVet', 10);
+        const secretPass2 = await bcrypt.hash('futureFS', 10);
 
-        await client.query('DROP TABLE IF EXISTS users;');
         await client.query(`
+            DROP TABLE IF EXISTS users;
             CREATE TABLE IF NOT EXISTS users (
                 id SERIAL PRIMARY KEY,
                 username VARCHAR(255) NOT NULL,
-                password VARCHAR(255) NOT NULL
+                password VARCHAR(255) NOT NULL,
+                is_admin BOOLEAN DEFAULT false
             );
+
+            INSERT INTO users (username, password, is_admin)
+            VALUES 
+            ('EdwinV', '${secretPass1}', true), 
+            ('Alberto', '${secretPass2}', true);  
         `);
-        await client.query(`
-            INSERT INTO users (username, password)
-            VALUES ($1, $2), 
-                   ($3, $4);
-        `, ['EdwinV', secretPass1, 'Alberto', secretPass2]);
 
         console.log('User table seeded successfully!');
     } catch (e) {
