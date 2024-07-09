@@ -6,7 +6,7 @@ import { createOrder, getOrderHistory, cancelOrder } from '../models/order.js';
 import bcrypt from 'bcrypt';
 // import jwt from 'jsonwebtoken';
 
-const secretJwt = 'superSecret';
+const secretJwt = process.env.JWT_SECRET || 'superSecret';
 
 const apiRouter = express.Router();
 

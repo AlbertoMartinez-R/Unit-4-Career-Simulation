@@ -42,7 +42,7 @@ export const getProducts = async () => {
 export const getProductById = async (id) => {
   try {
     const { rows: product } = await client.query(`
-      SELECT * FROM pubkic.products WHERE id = $1;
+      SELECT * FROM public.products WHERE id = $1;
     `, [id]);
 
     if (product.length === 0) {

@@ -7,9 +7,9 @@ export const AuthProvider = ({ children }) => {
 
   const login = (username, password) => {
 
-    if (username === 'AlbertoM' && password === 'password123') {
+    if (username === 'Alberto' && password === 'futureFS') {
       setUser({ username: 'admin', role: 'admin' });
-    } else if (username === 'EdwinV' && password === 'password123') {
+    } else if (username === 'EdwinV' && password === 'armyVet') {
       setUser({ username: 'user', role: 'user' });
     }
   };
