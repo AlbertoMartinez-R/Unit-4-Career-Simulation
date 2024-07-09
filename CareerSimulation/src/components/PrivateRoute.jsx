@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from './context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 
 const PrivateRoute = ({ component: Component, roles, ...rest }) => {
   const { isAuthenticated, user } = useAuth();
@@ -10,7 +10,6 @@ const PrivateRoute = ({ component: Component, roles, ...rest }) => {
   }
 
   if (roles && roles.indexOf(user.role) === -1) {
-
     return <Navigate to="/" replace />;
   }
 

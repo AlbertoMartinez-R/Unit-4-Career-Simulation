@@ -7,6 +7,8 @@ const RegisterPage = () => {
     username: '',
     password: ''
   });
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -17,11 +19,13 @@ const RegisterPage = () => {
     e.preventDefault();
 
     try {
-      const data = await registerUser(formData.username, formData.password);
-      alert('Registration successful!');
+      await registerUser(formData.username, formData.password);
+      setSuccess('Registration successful!');
+      setError(null);
       setFormData({ username: '', password: '' });
     } catch (error) {
-      alert('Error registering user: ' + error.message);
+      setError('Error registering user: ' + error.message);
+      setSuccess(null);
       console.error('Error registering user:', error);
     }
   };
@@ -46,6 +50,8 @@ const RegisterPage = () => {
           placeholder="Password"
           required
         />
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {success && <p style={{ color: 'green' }}>{success}</p>}
         <button type="submit">Register</button>
       </form>
     </div>
