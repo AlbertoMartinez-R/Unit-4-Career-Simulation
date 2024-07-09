@@ -5,11 +5,8 @@ import './RegisterPage.css';
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
     username: '',
-    password: '',
-    confirmPassword: ''
+    password: ''
   });
-
-  const [apiResponse, setApiResponse] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -18,15 +15,11 @@ const RegisterPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match');
-      return;
-    }
 
     try {
       const data = await registerUser(formData.username, formData.password);
       alert('Registration successful!');
-      setFormData({ username: '', password: '', confirmPassword: '' });
+      setFormData({ username: '', password: '' });
     } catch (error) {
       alert('Error registering user: ' + error.message);
       console.error('Error registering user:', error);
@@ -51,14 +44,6 @@ const RegisterPage = () => {
           value={formData.password}
           onChange={handleChange}
           placeholder="Password"
-          required
-        />
-        <input
-          type="password"
-          name="confirmPassword"
-          value={formData.confirmPassword}
-          onChange={handleChange}
-          placeholder="Confirm Password"
           required
         />
         <button type="submit">Register</button>
