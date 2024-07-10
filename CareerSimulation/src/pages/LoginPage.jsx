@@ -1,20 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { loginUser } from '../services/api';
+import { AuthContext } from '../components/context/AuthContext';
 
 const LoginPage = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [formData, setFormData] = useState({
+    username: '',
+    password: ''
+  });
+  const { login } = useContext(AuthContext);
   const [error, setError] = useState(null);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      const data = await loginUser(username, password);
-      console.log('Login successful:', data);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
-    } catch (err) {
-      console.error('Error during login:', err);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const data = await loginUser(formData.username, formData.password);
+      login(data.user); // Store user data in context
+      alert('Login successful!');
+    } catch (error) {
       setError('Login failed. Please check your credentials and try again.');
+      console.error('Error logging in:', error);
     }
   };
 
@@ -26,8 +35,9 @@ const LoginPage = () => {
           <label>Username:</label>
           <input
             type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
             required
           />
         </div>
@@ -35,8 +45,9 @@ const LoginPage = () => {
           <label>Password:</label>
           <input
             type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
             required
           />
         </div>

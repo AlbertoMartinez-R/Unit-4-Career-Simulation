@@ -70,3 +70,43 @@ export const removeProductById = async (id) => {
     console.error(`Failed to remove product with ID ${id}!`, e);
   }
 };
+
+export const updateProductDetails = async (id, details) => {
+  try {
+    const query = `
+      UPDATE public.products
+      SET brand = $1, name = $2, description = $3, price = $4, in_stock = $5, quality = $6
+      WHERE id = $7 RETURNING *;
+    `;
+    const values = [details.brand, details.name, details.description, details.price, details.in_stock, details.quality, id];
+    const result = await client.query(query, values);
+
+    if (result.rowCount === 0) {
+      throw new Error(`Product with ID ${id} not found`);
+    }
+
+    return result.rows[0];
+  } catch (e) {
+    console.error(`Failed to update product with ID ${id}!`, e);
+  }
+};
+
+export const updateProductStatus = async (id, status) => {
+  try {
+    const query = `
+      UPDATE public.products
+      SET in_stock = $1
+      WHERE id = $2 RETURNING *;
+    `;
+    const values = [status, id];
+    const result = await client.query(query, values);
+
+    if (result.rowCount === 0) {
+      throw new Error(`Product with ID ${id} not found`);
+    }
+
+    return result.rows[0];
+  } catch (e) {
+    console.error(`Failed to update product status with ID ${id}!`, e);
+  }
+};

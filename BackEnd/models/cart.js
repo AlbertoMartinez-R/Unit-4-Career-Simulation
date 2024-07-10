@@ -54,3 +54,18 @@ export const removeCartItem = async (id) => {
     console.error('Failed to remove cart item!', e);
   }
 };
+
+export const updateCartItemQuantity = async (id, productId, quantity) => {
+  try {
+    const { rows } = await client.query(`
+      UPDATE cart
+      SET product_id = $1, quantity = $2
+      WHERE id = $3
+      RETURNING *;
+    `, [productId, quantity, id]);
+
+    return rows[0];
+  } catch (e) {
+    console.error('Failed to update cart item quantity!', e);
+  }
+};
