@@ -62,3 +62,19 @@ export const getUserByUsername = async (username) => {
         console.error('Failed to get user by username!', err);
     }
 };
+
+export const updateUserRoleModel = async (userId, role) => {
+    try {
+        const updateRole = await client.query(`UPDATE users FROM SET role`)
+        const result = await client.query(`
+            UPDATE users
+            SET roles = $1
+            WHERE id = $2
+            RETURN *
+            `,[role])
+            return rows[0]
+    } catch (e) {
+        console.error('Failed to update user role!');
+        console.error(e);
+    }
+};

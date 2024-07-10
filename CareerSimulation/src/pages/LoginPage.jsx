@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { loginUser } from '../services/api';
 import { AuthContext } from '../components/context/AuthContext';
+import './LoginPage.css'
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -28,9 +29,9 @@ const LoginPage = () => {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
+    <div className="login-page">
+      <h1>Login</h1>
+      <form onSubmit={handleSubmit} className="login-form">
         <div>
           <label>Username:</label>
           <input

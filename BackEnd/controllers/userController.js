@@ -85,3 +85,14 @@ export const updateUserProfile = async (req, res) => {
         res.status(500).json({ message: 'Failed to update user profile!' });
     }
 };
+
+export const updateUserRole = async (req, res) => {
+    const {userId, role } = req.body;
+    try {
+        const updateRole = await updateUserProfile(userId, role);
+        res.status(200).json(updateRole);
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to update user role!'})
+    }
+};
+
