@@ -1,18 +1,9 @@
-import { createUser, getUser, getUserByUsername } from '../models/user.js';
+import { createUserModel, getUser, getUserByIdModel, updateUserRoleModel, banUserModel } from '../models/user.js';
 import { addToWishlistModel, removeFromWishlistModel, fetchWishlistModel, fetchUserProfileModel, updateUserProfileModel } from '../models/wishlist.js';
+import { fetchOrderHistoryModel, processCheckoutModel } from '../models/order.js';
 import bcrypt from 'bcrypt';
 
-export const registerUser = async (req, res) => {
-    const { username, password } = req.body;
-    try {
-        const user = await createUser({ username, password });
-        res.status(201).json(user);
-    } catch (error) {
-        res.status(500).json({ message: 'Failed to register user!' });
-    }
-};
-
-export const getUsers = async (req, res) => {
+export const getAllUsers = async (req, res) => {
     try {
         const users = await getUser();
         res.status(200).json(users);
@@ -21,17 +12,53 @@ export const getUsers = async (req, res) => {
     }
 };
 
-export const loginUser = async (req, res) => {
+export const getUserById = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const user = await getUserByIdModel(id);
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to get user by ID!' });
+    }
+};
+
+export const createUser = async (req, res) => {
     const { username, password } = req.body;
     try {
-        const user = await getUserByUsername(username);
-        if (user && await bcrypt.compare(password, user.password)) {
-            res.status(200).json({ message: 'Login successful!', user });
-        } else {
-            res.status(401).json({ message: 'Invalid credentials!' });
-        }
+        const user = await createUserModel({ username, password });
+        res.status(201).json(user);
     } catch (error) {
-        res.status(500).json({ message: 'Failed to login!' });
+        res.status(500).json({ message: 'Failed to create user!' });
+    }
+};
+
+export const updateUserRole = async (req, res) => {
+    const { userId, role } = req.body;
+    try {
+        const updatedUser = await updateUserRoleModel(userId, role);
+        res.status(200).json(updatedUser);
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to update user role!' });
+    }
+};
+
+export const banUser = async (req, res) => {
+    const { userId } = req.params;
+    try {
+        const bannedUser = await banUserModel(userId);
+        res.status(200).json(bannedUser);
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to ban user!' });
+    }
+};
+
+export const fetchWishlist = async (req, res) => {
+    const { userId } = req.params;
+    try {
+        const wishlist = await fetchWishlistModel(userId);
+        res.status(200).json(wishlist);
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to fetch wishlist!' });
     }
 };
 
@@ -55,16 +82,6 @@ export const removeFromWishlist = async (req, res) => {
     }
 };
 
-export const fetchWishlist = async (req, res) => {
-    const { userId } = req.params;
-    try {
-        const wishlist = await fetchWishlistModel(userId);
-        res.status(200).json(wishlist);
-    } catch (error) {
-        res.status(500).json({ message: 'Failed to fetch wishlist!' });
-    }
-};
-
 export const fetchUserProfile = async (req, res) => {
     const { userId } = req.params;
     try {
@@ -83,5 +100,25 @@ export const updateUserProfile = async (req, res) => {
         res.status(200).json(updatedProfile);
     } catch (error) {
         res.status(500).json({ message: 'Failed to update user profile!' });
+    }
+};
+
+export const fetchOrderHistory = async (req, res) => {
+    const { userId } = req.params;
+    try {
+        const orders = await fetchOrderHistoryModel(userId);
+        res.status(200).json(orders);
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to fetch order history!' });
+    }
+};
+
+export const processCheckout = async (req, res) => {
+    const { userId, cartItems } = req.body;
+    try {
+        const checkout = await processCheckoutModel({ userId, cartItems });
+        res.status(200).json(checkout);
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to process checkout!' });
     }
 };

@@ -1,4 +1,10 @@
-import { getProducts, getProductById, removeProductById, updateProductDetails, updateProductStatus } from '../models/product.js';
+import {
+    getProducts,
+    getProductById,
+    removeProductById,
+    updateProductDetails,
+    updateProductStatus
+} from '../models/product';
 
 export const getAllProductsController = async (req, res) => {
     try {
