@@ -39,13 +39,14 @@ export const getUser = async () => {
     }
 };
 
-export const createUser = async ({ username, password }) => {
+export const createUserModel = async ({ username, password }) => {
     try {
         const encryptedPassword = await bcrypt.hash(password, salt_count);
         const result = await client.query(`
             INSERT INTO public.users (username, password, is_admin)
-            VALUES ($1, $2, $3);
-        `, [username, encryptedPassword]);
+            VALUES ($1, $2, $3)
+            RETURNING *;
+        `, [username, encryptedPassword, false]);
 
         return result.rows[0];
     } catch (e) {
@@ -54,12 +55,50 @@ export const createUser = async ({ username, password }) => {
     }
 };
 
+export const getUserByIdModel = async (id) => {
+    try {
+        const { rows } = await client.query('SELECT * FROM public.users WHERE id = $1', [id]);
+        return rows[0];
+    } catch (err) {
+        console.error('Failed to get user by ID!', err);
+    }
+};
+
 export const getUserByUsername = async (username) => {
     try {
-        const { rows } = await client.query('SELECT * FROM public.users username = $1', [username]);
+        const { rows } = await client.query('SELECT * FROM public.users WHERE username = $1', [username]);
         return rows[0];
     } catch (err) {
         console.error('Failed to get user by username!', err);
+    }
+};
+
+export const updateUserRoleModel = async (userId, role) => {
+    try {
+        const { rows } = await client.query(`
+            UPDATE users
+            SET role = $1
+            WHERE id = $2
+            RETURNING *;
+        `, [role, userId]);
+        return rows[0];
+    } catch (e) {
+        console.error('Failed to update user role!');
+        console.error(e);
+    }
+};
+
+export const banUserModel = async (userId) => {
+    try {
+        const { rows } = await client.query(`
+            UPDATE users 
+            SET is_banned = true 
+            WHERE id = $1
+            RETURNING *;
+        `, [userId]);
+        return rows[0];
+    } catch (e) {
+        console.error('Failed to ban user', e);
     }
 };
 
