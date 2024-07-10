@@ -1,4 +1,4 @@
-import { createUserModel, getUser, getUserByIdModel, updateUserRoleModel, banUserModel } from '../models/user.js';
+import { createUserModel, getUser, getUserByUsername, updateUserRoleModel, banUserModel } from '../models/user.js';
 import { addToWishlistModel, removeFromWishlistModel, fetchWishlistModel, fetchUserProfileModel, updateUserProfileModel } from '../models/wishlist.js';
 import { fetchOrderHistoryModel, processCheckoutModel } from '../models/order.js';
 import bcrypt from 'bcrypt';
@@ -122,14 +122,3 @@ export const processCheckout = async (req, res) => {
         res.status(500).json({ message: 'Failed to process checkout!' });
     }
 };
-
-export const updateUserRole = async (req, res) => {
-    const {userId, role } = req.body;
-    try {
-        const updateRole = await updateUserProfile(userId, role);
-        res.status(200).json(updateRole);
-    } catch (error) {
-        res.status(500).json({ message: 'Failed to update user role!'})
-    }
-};
-

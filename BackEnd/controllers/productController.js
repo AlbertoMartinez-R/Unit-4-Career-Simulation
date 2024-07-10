@@ -4,7 +4,7 @@ import {
     removeProductById,
     updateProductDetails,
     updateProductStatus
-} from '../models/product';
+} from '/home/amart175/Coursework/Unit_4/Unit-4-Career-Simulation/BackEnd/models/product.js';
 
 export const getAllProductsController = async (req, res) => {
     try {
