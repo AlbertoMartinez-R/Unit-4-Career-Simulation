@@ -1,74 +1,80 @@
-import { client } from "../database/db.js";
+import { client } from '../database/db.js';
 import bcrypt from 'bcrypt';
-const salt_count = 10
+const salt_count = 10;
 
 export const seedUsers = async () => {
     try {
-
-        const secretPass1 = await bcrypt.hash('armyVet', 10)
-        const secretPass2 = await bcrypt.hash('futureFS', 10)
-
+        const secretPass1 = await bcrypt.hash('armyVet', 10);
+        const secretPass2 = await bcrypt.hash('futureFS', 10);
 
         await client.query(`
             DROP TABLE IF EXISTS users;
             CREATE TABLE IF NOT EXISTS users (
                 id SERIAL PRIMARY KEY,
                 username VARCHAR(255) NOT NULL,
-                password VARCHAR(255) NOT NULL
+                password VARCHAR(255) NOT NULL,
+                is_admin BOOLEAN DEFAULT false
             );
 
-            INSERT INTO users (username, password)
-            VALUES ('EdwinV', '${secretPass1}'), 
-                   ('Alberto', '${secretPass2}');  
-            `)
+            INSERT INTO users (username, password, is_admin)
+            VALUES 
+            ('EdwinV', '${secretPass1}', true), 
+            ('Alberto', '${secretPass2}', true);  
+        `);
+
+        console.log('User table seeded successfully!');
     } catch (e) {
-        console.error('Failed to seed user Database!');
+        console.error('Failed to seed user database!');
         console.error(e);
     }
 };
-
 
 export const getUser = async () => {
     try {
-        const { rows: users } = await client.query(`
-            SELECT * FROM users;
-         `)
-
+        const { rows: users } = await client.query('SELECT * FROM public.users;');
         return users;
-
     } catch (e) {
-        console.error('Failed to get User!');
+        console.error('Failed to get users!');
         console.error(e);
     }
 };
 
-
-export const createUser = async ({username, password})=> {
+export const createUser = async ({ username, password }) => {
     try {
-
-        const encryptedPassword = await bcrypt.hash(password, salt_count)
+        const encryptedPassword = await bcrypt.hash(password, salt_count);
         const result = await client.query(`
-            INSERT INTO users (username, password)
-            VALUES ($1, $2)
-            RETURNING *
-            `,[username, encryptedPassword])
+            INSERT INTO public.users (username, password, is_admin)
+            VALUES ($1, $2, $3);
+        `, [username, encryptedPassword]);
 
-            return result.rows[0]
-
+        return result.rows[0];
     } catch (e) {
-        console.error('Failed to create User!');
+        console.error('Failed to create user!');
         console.error(e);
     }
 };
 
-
-export const getUserByUsername =async (username) => {
+export const getUserByUsername = async (username) => {
     try {
-        const { rows } = await client.query(`SELECT * FROM users 
-            WHERE username = $1`, [username])
-        console.log("selected customers", rows)
-        return rows[0]
+        const { rows } = await client.query('SELECT * FROM public.users username = $1', [username]);
+        return rows[0];
     } catch (err) {
-        console.log("failed getting customer", err)
+        console.error('Failed to get user by username!', err);
     }
-}   
+};
+
+export const updateUserRoleModel = async (userId, role) => {
+    try {
+        const updateRole = await client.query(`UPDATE users FROM SET role`)
+        const result = await client.query(`
+            UPDATE users
+            SET roles = $1
+            WHERE id = $2
+            RETURN *
+            `,[role])
+            return rows[0]
+    } catch (e) {
+        console.error('Failed to update user role!');
+        console.error(e);
+    }
+};

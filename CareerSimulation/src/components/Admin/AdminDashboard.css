@@ -1,0 +1,32 @@
+.admin-dashboard {
+    padding: 2rem;
+}
+
+.admin-dashboard h2 {
+    margin-bottom: 1rem;
+}
+
+.admin-dashboard ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.admin-dashboard li {
+    margin-bottom: 0.5rem;
+}
+
+.admin-dashboard button {
+    margin-left: 1rem;
+}
+
+.admin-dashboard form {
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-dashboard input,
+.admin-dashboard select,
+.admin-dashboard button {
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+}

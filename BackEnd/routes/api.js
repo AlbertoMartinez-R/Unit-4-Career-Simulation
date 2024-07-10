@@ -1,137 +1,73 @@
-import express, { response } from 'express';
-import { getMethods } from '../database/index.js';
-import { request } from 'http';
-import { getUserByUsername } from '../models/user.js';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-
-const secretJwt = 'superSecret';
+import express from 'express';
+import {
+  getAllUsers,
+  getUserById,
+  createUser,
+  updateUserRole,
+  banUser,
+  fetchWishlist,
+  addToWishlist,
+  removeFromWishlist,
+  fetchUserProfile,
+  updateUserProfile,
+  fetchOrderHistory,
+  processCheckout
+} from '../controllers/userController.js';
+import {
+  getAllProductsController,
+  getProductByIdController,
+  removeProductByIdController,
+  updateProductDetailsController,
+  updateProductStatusController
+} from '../controllers/productController.js';
+import {
+  createOrderController,
+  getOrderHistoryController,
+  cancelOrderController
+} from '../controllers/orderController.js';
+import {
+  createCartController,
+  getCartController,
+  removeCartItemController,
+  updateCartItemQuantityController
+} from '../controllers/cartController.js';
 
 const apiRouter = express.Router();
 
-apiRouter.post('/login', async (request, response, next) => {
-    try {
-        const { username, password } = request.body;
-        const newUser = await getUserByUsername(username)
-
-        if (newUser) {
-            console.log('User Found!')
-            if (await bcrypt.compare(password, newUser.password) == true) {
-
-                const token = jwt.sign({
-                    id: newUser.id,
-                    username: newUser.username
-                },
-                    secretJwt,
-                    { expiresIn: '1w' }
-                )
-                response.send({ message: 'Successfully Logged In!', token: token })
-            } else {
-                response.send('Username or Password did not match!')
-            }
-        } else {
-            response.send('User Not Found!')
-        }
-        console.log(newUser)
-
-    } catch (e) {
-        console.error('Failed to Login!');
-        console.error(e);
-    }
+apiRouter.get('/', (req, res) => {
+  res.json({ message: 'API is working!' });
 });
 
-
-
-apiRouter.get('/user,', async (request, response, next) => {
-    try {
-        const user = await getMethods.user.getUser();
-
-        response.send({ user });
-
-    } catch (e) {
-        next(e);
-    }
+apiRouter.get('/test', (req, res) => {
+  res.json({ message: 'API is working!' });
 });
 
-// // apiRouter.post('/user', async (request, response, next) => {
-// //     const {username, password} = request.body;
+apiRouter.get('/users', getAllUsers);
+apiRouter.get('/users/:id', getUserById);
+apiRouter.post('/users', createUser);
+apiRouter.put('/users/:id/role', updateUserRole);
+apiRouter.put('/users/:id/ban', banUser);
+apiRouter.get('/users/:id/wishlist', fetchWishlist);
+apiRouter.post('/users/:id/wishlist', addToWishlist);
+apiRouter.delete('/users/:id/wishlist/:productId', removeFromWishlist);
+apiRouter.get('/users/:id/profile', fetchUserProfile);
+apiRouter.put('/users/:id/profile', updateUserProfile);
+apiRouter.get('/users/:id/orders', fetchOrderHistory);
+apiRouter.post('/users/:id/checkout', processCheckout);
 
-// //     try {
+apiRouter.get('/products', getAllProductsController);
+apiRouter.get('/products/:id', getProductByIdController);
+apiRouter.delete('/products/:id', removeProductByIdController);
+apiRouter.put('/products/:id', updateProductDetailsController);
+apiRouter.put('/products/:id/status', updateProductStatusController);
 
-// //     const newUser = await getMethods.user.createUser({
-// //         username,
-// //         password,
-// //     });
+apiRouter.post('/order', createOrderController);
+apiRouter.get('/orders', getOrderHistoryController);
+apiRouter.delete('/order/:id', cancelOrderController);
 
-//     response.status(201).send({
-//         message: `User created successfully!`,
-//     });
-
-//     } catch (e) {
-//         next(e);
-//     }
-// });
-
-apiRouter.delete('/user', async (request, response, next) => {
-    try {
-
-    } catch (e) {
-        next(e);
-    }
-});
-
-
-
-apiRouter.get('/products', async (request, response, next) => {
-    try {
-        const product = await getMethods.product.getProduct();
-
-        response.send({ product });
-
-    } catch (e) {
-        next(e);
-    }
-});
-
-
-
-apiRouter.get('/cart', async (request, response, next) => {
-
-    try {
-        const cart = await getMethods.cart.getCart();
-
-        response.send({ cart });
-
-    } catch (e) {
-        next(e);
-    }
-});
-
-apiRouter.post('/cart', async (request, response, next) => {
-    const { productId, quality } = request.body;
-
-    try {
-        const makeCart = await getMethods.cart.createCart({
-            productId,
-            quality,
-        });
-
-        response.status(201).send({
-            message: `Created Your Cart!`,
-        });
-
-    } catch (e) {
-        next(e);
-    }
-});
-
-apiRouter.delete('/cart', async (request, response, next) => {
-    try {
-
-    } catch (e) {
-        next(e);
-    }
-});
+apiRouter.post('/cart', createCartController);
+apiRouter.get('/cart', getCartController);
+apiRouter.delete('/cart/:id', removeCartItemController);
+apiRouter.put('/cart/:id', updateCartItemQuantityController);
 
 export default apiRouter;
-

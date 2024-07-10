@@ -1,54 +1,71 @@
-import { client } from "../database/db.js";
+import { client } from '../database/db.js';
 
 export const seedCart = async () => {
-    try {
+  try {
+    await client.query(`
+      DROP TABLE IF EXISTS cart;
+      CREATE TABLE IF NOT EXISTS cart (
+        id SERIAL PRIMARY KEY,
+        product_id INTEGER REFERENCES products(id),
+        quantity INTEGER DEFAULT 1
+      );
+    `);
 
-        await client.query(`
-            DROP TABLE IF EXISTS cart;
-            CREATE TABLE IF NOT EXISTS cart (
-                id SERIAL PRIMARY KEY,
-                product_id INTEGER REFERENCES products(id),
-                quality INTEGER DEFAULT 1
-            )
-            `)
-
-    } catch (e) {
-        console.error('Failed to seed cart Database!');
-        console.error(e);
-    }
+    console.log('Cart table seeded successfully!');
+  } catch (e) {
+    console.error('Failed to seed cart database!', e);
+  }
 };
 
+export const createCart = async ({ productId, quantity }) => {
+  try {
+    const { rows } = await client.query(`
+      INSERT INTO cart (product_id, quantity)
+      VALUES ($1, $2)
+      RETURNING *;
+    `, [productId, quantity]);
 
-
-export const createCart = async ({ brand, name, price, quality }) => {
-    try {
-
-        const { rows } = await client.query(`
-            INSERT INTO cart (brand, name, price, quality)
-            VALUES ($1, $2. $3, $4)
-            RETURNING *;
-        `, [brand, name, price, quality])
-
-    } catch (e) {
-        console.error('Failed to create Cart!');
-        console.error(e);
-    }
+    return rows[0];
+  } catch (e) {
+    console.error('Failed to create cart!', e);
+  }
 };
-
 
 export const getCart = async () => {
-    try {
+  try {
+    const { rows: cart } = await client.query(`
+      SELECT * FROM cart;
+    `);
+    return cart;
+  } catch (e) {
+    console.error('Failed to get cart!', e);
+  }
+};
 
-        const { rows: cart } = await client.query(`
-            JOIN brand ON cart.brand = product.brand
-            JOIN name ON cart.name = product.name
-            JOIN price ON cart.price = product.price
-            JOIN quality ON cart.quality = product.quality
-            `);
-        return cart;
+export const removeCartItem = async (id) => {
+  try {
+    const { rows } = await client.query(`
+      DELETE FROM cart WHERE id = $1
+      RETURNING *;
+    `, [id]);
 
-    } catch (e) {
-        console.error('Failed to get Cart!');
-        console.error(e);
-    }
+    return rows[0];
+  } catch (e) {
+    console.error('Failed to remove cart item!', e);
+  }
+};
+
+export const updateCartItemQuantity = async (id, productId, quantity) => {
+  try {
+    const { rows } = await client.query(`
+      UPDATE cart
+      SET product_id = $1, quantity = $2
+      WHERE id = $3
+      RETURNING *;
+    `, [productId, quantity, id]);
+
+    return rows[0];
+  } catch (e) {
+    console.error('Failed to update cart item quantity!', e);
+  }
 };

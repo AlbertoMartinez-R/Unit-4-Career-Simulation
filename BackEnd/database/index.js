@@ -1,15 +1,13 @@
 import { client, connectDataBase } from './db.js';
 import { seedUsers, getUser, createUser, getUserByUsername } from '../models/user.js';
-import { seedProducts, getProduct } from '../models/product.js';
+import { seedProducts, getProducts } from '../models/product.js';
 import { seedCart, createCart, getCart } from '../models/cart.js';
 
-
-const initDataBase = async (seed = false) => {
+export const initDataBase = async (seed = false) => {
     try {
-
         await connectDataBase();
 
-        if(seed){
+        if (seed) {
             await seedUsers();
             await seedProducts();
             await seedCart();
@@ -19,11 +17,8 @@ const initDataBase = async (seed = false) => {
 
     } catch (e) {
         console.error('Failed to initiate Database!', e);
-    } finally {
-        client.end();
     }
 };
-
 
 export const getMethods = {
     user: {
@@ -31,16 +26,13 @@ export const getMethods = {
         createUser,
         getUserByUsername
     },
-
     product: {
-        getProduct,
+        getProducts,
     },
-
     cart: {
         createCart,
         getCart
     },
 };
-
 
 // initDataBase(true);
