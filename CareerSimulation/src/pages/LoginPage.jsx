@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { login } from '../services/api';
+import { loginUser } from '../services/api';
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
@@ -9,9 +9,11 @@ const LoginPage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const data = await login(username, password);
+      const data = await loginUser(username, password);
       console.log('Login successful:', data);
+
     } catch (err) {
+      console.error('Error during login:', err);
       setError('Login failed. Please check your credentials and try again.');
     }
   };

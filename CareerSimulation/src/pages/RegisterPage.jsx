@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { register } from '../services/api'; // Ensure this import is correct
+import { registerUser } from '../services/api';
 import './RegisterPage.css';
 
 const RegisterPage = () => {
@@ -24,23 +24,12 @@ const RegisterPage = () => {
     }
 
     try {
-      const data = await register(formData.username, formData.password);
+      const data = await registerUser(formData.username, formData.password);
       alert('Registration successful!');
       setFormData({ username: '', password: '', confirmPassword: '' });
     } catch (error) {
       alert('Error registering user: ' + error.message);
       console.error('Error registering user:', error);
-    }
-  };
-
-  const testApiConnection = async () => {
-    try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api'}/test`);
-      const data = await response.json();
-      setApiResponse(data);
-      console.log('API response:', data);
-    } catch (error) {
-      console.error('Error connecting to API:', error);
     }
   };
 
@@ -74,8 +63,6 @@ const RegisterPage = () => {
         />
         <button type="submit">Register</button>
       </form>
-      <button onClick={testApiConnection}>Test API Connection</button>
-      {apiResponse && <pre>{JSON.stringify(apiResponse, null, 2)}</pre>}
     </div>
   );
 };

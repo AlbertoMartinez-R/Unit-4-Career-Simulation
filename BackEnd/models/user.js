@@ -31,7 +31,7 @@ export const seedUsers = async () => {
 
 export const getUser = async () => {
     try {
-        const { rows: users } = await client.query('SELECT * FROM public.users ORDER BY id ASC;');
+        const { rows: users } = await client.query('SELECT * FROM public.users;');
         return users;
     } catch (e) {
         console.error('Failed to get users!');
@@ -43,9 +43,8 @@ export const createUser = async ({ username, password }) => {
     try {
         const encryptedPassword = await bcrypt.hash(password, salt_count);
         const result = await client.query(`
-            INSERT INTO users (username, password)
-            VALUES ($1, $2)
-            RETURNING *;
+            INSERT INTO public.users (username, password, is_admin)
+            VALUES ($1, $2, $3);
         `, [username, encryptedPassword]);
 
         return result.rows[0];
@@ -57,7 +56,7 @@ export const createUser = async ({ username, password }) => {
 
 export const getUserByUsername = async (username) => {
     try {
-        const { rows } = await client.query('SELECT * FROM users WHERE username = $1', [username]);
+        const { rows } = await client.query('SELECT * FROM public.users username = $1', [username]);
         return rows[0];
     } catch (err) {
         console.error('Failed to get user by username!', err);
