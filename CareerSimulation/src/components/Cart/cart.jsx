@@ -1,69 +1,59 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { AuthContext } from './context/AuthContext';
-import { fetchCart, updateCart, removeItemFromCart } from '../services/api';
+import React, { useEffect, useState } from 'react';
+import { fetchCart, updateCartItemQuantity, removeItemFromCart } from '../../services/api';
 
-const Cart = () => {
-  const { user } = useContext(AuthContext);
-  const [cartItems, setCartItems] = useState([]);
-  const [error, setError] = useState(null);
+const Cart = ({ userId }) => {
+    const [cartItems, setCartItems] = useState([]);
 
-  useEffect(() => {
-    const loadCart = async () => {
-      try {
-        const cartData = await fetchCart(user.id);
-        setCartItems(cartData);
-      } catch (error) {
-        setError('Failed to fetch cart');
-        console.error('Error fetching cart:', error);
-      }
+    useEffect(() => {
+        const loadCart = async () => {
+            try {
+                const cartData = await fetchCart(userId);
+                setCartItems(cartData);
+            } catch (error) {
+                console.error('Error fetching cart:', error);
+            }
+        };
+
+        loadCart();
+    }, [userId]);
+
+    const handleUpdateQuantity = async (productId, quantity) => {
+        try {
+            await updateCartItemQuantity(userId, productId, quantity);
+            // Refresh cart items
+            const updatedCart = await fetchCart(userId);
+            setCartItems(updatedCart);
+        } catch (error) {
+            console.error('Error updating cart item quantity:', error);
+        }
     };
 
-    loadCart();
-  }, [user.id]);
+    const handleRemoveItem = async (productId) => {
+        try {
+            await removeItemFromCart(userId, productId);
+            // Refresh cart items
+            const updatedCart = await fetchCart(userId);
+            setCartItems(updatedCart);
+        } catch (error) {
+            console.error('Error removing cart item:', error);
+        }
+    };
 
-  const handleQuantityChange = async (itemId, quantity) => {
-    try {
-      const updatedCart = await updateCart(user.id, itemId, quantity);
-      setCartItems(updatedCart);
-    } catch (error) {
-      setError('Error updating cart item: ' + error.message);
-      console.error('Error updating cart item:', error);
-    }
-  };
-
-  const handleRemoveItem = async (itemId) => {
-    try {
-      const updatedCart = await removeItemFromCart(user.id, itemId);
-      setCartItems(updatedCart);
-    } catch (error) {
-      setError('Error removing cart item: ' + error.message);
-      console.error('Error removing cart item:', error);
-    }
-  };
-
-  const calculateTotal = () => {
-    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-  };
-
-  return (
-    <div className="cart">
-      <h1>My Cart</h1>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <ul>
-        {cartItems.map(item => (
-          <li key={item.id}>
-            <p>{item.name} - ${item.price} x {item.quantity}</p>
-            <div>
-              <button onClick={() => handleQuantityChange(item.id, item.quantity + 1)}>+</button>
-              <button onClick={() => handleQuantityChange(item.id, item.quantity - 1)}>-</button>
-              <button onClick={() => handleRemoveItem(item.id)}>Remove</button>
-            </div>
-          </li>
-        ))}
-      </ul>
-      <h2>Total: ${calculateTotal()}</h2>
-    </div>
-  );
+    return (
+        <div>
+            <h1>Cart</h1>
+            <ul>
+                {cartItems.map(item => (
+                    <li key={item.productId}>
+                        {item.name} - {item.quantity}
+                        <button onClick={() => handleUpdateQuantity(item.productId, item.quantity + 1)}>+</button>
+                        <button onClick={() => handleUpdateQuantity(item.productId, item.quantity - 1)}>-</button>
+                        <button onClick={() => handleRemoveItem(item.productId)}>Remove</button>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
 };
 
 export default Cart;
